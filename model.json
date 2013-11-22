@@ -1,0 +1,14 @@
+{
+    "dimensions": [
+        {"name":"wind_speed"},
+        {"name":"datetime"},
+        {"name":"lat"},
+        {"name":"lon"}
+    ],
+    "cubes": [
+        {
+            "name": "wind",
+            "dimensions": ["wind_speed", "datetime", "lat", "lon"]
+        }
+    ]
+}
