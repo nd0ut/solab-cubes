@@ -16,9 +16,9 @@ def insert(original, new, pos):
   return original[:pos] + new + original[pos:]
 
 # Postgres config
-POSTGRES_USER = "postgres"
-POSTGRES_PASSWORD = "postgres"
-POSTGRES_DBNAME = "cube"
+POSTGRES_USER = "kate"
+POSTGRES_PASSWORD = "06Sen2013"
+POSTGRES_DBNAME = "cube_db"
 
 # initialize postgres connection
 con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' % {
@@ -29,6 +29,8 @@ con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' %
 
 root_path = 'http://posada.solab.rshu.ru'
 dap_folders_url = '%s/pydap/public/allData/SSMI/f13/bmaps_v07/' % root_path
+
+filecounter = 0
 
 print "DAP ROOT PATH: " + dap_folders_url
 
@@ -61,11 +63,13 @@ for folder in folders:
         file_url = root_path + '/pydap/' + data_file.attributes['urlPath'].value
         file_name = data_file.attributes['name'].value
 
-        print file_url
-
         # add data to database
-        dataset = open_url(file_url)
-        parsers.wind.parse(con, dataset)
+        if filecounter <= 2 :
+            print file_url
+            dataset = open_url(file_url)
+            parsers.wind.parse(con, dataset)
+            filecounter = filecounter + 1
+
 
 con.commit()
 con.close()

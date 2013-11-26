@@ -3,9 +3,17 @@ import datetime
 def parse(dbConn, dataset):
   cur = dbConn.cursor()
 
-  wspd = dataset.wspd[:,:,:]
-  time = dataset.time[:,:,:]
+  lat_min = 600
 
+  wspd_data = dataset.wspd.wspd[:,:,:]
+
+  wspd = wspd_data[0][:,lat_min:,:]
+  lats = wspd_data[2][lat_min:]
+  lons = wspd_data[1][:]
+
+  time = dataset.time.time[:,:,:][0]
+  time = time[:,lat_min:,:]
+  
   wspd_scale_factor = dataset.wspd.scale_factor
   wspd_add_offset = dataset.wspd.add_offset
   time_scale_factor = dataset.time.scale_factor
@@ -18,34 +26,38 @@ def parse(dbConn, dataset):
   day=mydate[6:8]
   filedate = datetime.date(int(year), int(mon), int(day))
 
+  
   for i in range(wspd.shape[0]):
     for j in range(wspd.shape[1]):
+        for k in range(wspd.shape[2]):
 
-      # get coordinates
-      lon = j
-      lat = i
+          # get wind speed value
+          value = wspd[i, j, k]
+          if value >= 250:
+              continue
+          else:
+              value = value * wspd_scale_factor + wspd_add_offset
 
-      # get wind speed value
-      value = wspd[i, j, 0]
+          # get coordinates
+          lat = lats[j]
+          lon = lons[i]
+          part_day = k
 
-      if value < 250:
-          value = value * wspd_scale_factor + wspd_add_offset
+          # get date
+          t = time[i, j, k]
+          if t < 250:
+              t = t * time_scale_factor + time_add_offset
+              hour = int(t/60)
+              min = t%60
+              filetime = datetime.time(int(hour), int(min))
 
-      # get date
-      t = time[i, j, 0]
-      if t < 250:
-          t = t * time_scale_factor + time_add_offset
-          hour = int(t/60)
-          min = t%60
-          filetime = datetime.time(int(hour), int(min))
+          else:
+              filetime = datetime.time(0, 0)
 
-      else:
-          filetime = datetime.time(0, 0)
+          date = str(filedate) + ' ' + str(filetime)
+          #print date
 
-      date = str(filedate) + ' ' + str(filetime)
+          # add to database
+          wind_item = (date, float(value), float(lon), float(lat), part_day)
 
-      # add to database
-      wind_item = (date, float(value), lon, lat)
-
-      if value < 250:
-        cur.execute("INSERT INTO wind (datetime, wind_speed, lon, lat) VALUES (%s, %s, %s, %s)", wind_item)
+          cur.execute("INSERT INTO wind (datetime, wind_speed, lon, lat, part_day) VALUES (%s, %s, %s, %s, %s)", wind_item)

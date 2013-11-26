@@ -4,9 +4,9 @@ import psycopg2
 
 from pydap.client import open_url
 
-POSTGRES_USER = "postgres"
-POSTGRES_PASSWORD = "postgres"
-POSTGRES_DBNAME = "cube"
+POSTGRES_USER = "kate"
+POSTGRES_PASSWORD = "06Sen2013"
+POSTGRES_DBNAME = "cube_db"
 
 con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' % {
     "dbname": POSTGRES_DBNAME,
@@ -16,7 +16,7 @@ con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' %
 
 cur = con.cursor()
 
-cur.execute("CREATE TABLE IF NOT EXISTS wind (id SERIAL, datetime DATE, wind_speed REAL, lon REAL, lat REAL)")
+cur.execute("CREATE TABLE IF NOT EXISTS wind (id SERIAL, datetime timestamp, wind_speed REAL, lon REAL, lat REAL, part_day REAL)")
 
 con.commit()
 con.close()

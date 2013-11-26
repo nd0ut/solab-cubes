@@ -4,9 +4,9 @@ import psycopg2
 
 from pydap.client import open_url
 
-POSTGRES_USER = "postgres"
-POSTGRES_PASSWORD = "postgres"
-POSTGRES_DBNAME = "cube"
+POSTGRES_USER = "kate"
+POSTGRES_PASSWORD = "06Sen2013"
+POSTGRES_DBNAME = "cube_db"
 
 con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' % {
     "dbname": POSTGRES_DBNAME,
