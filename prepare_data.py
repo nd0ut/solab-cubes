@@ -7,8 +7,10 @@ from pydap.client import open_url
 import parsers
 
 
-def addPydapToUrl(url):
-  return insert(url, 'pydap/', len(root_path))
+def normalizeUrl(url):
+  res = url.replace("127.0.0.1:3031", "posada.solab.rshu.ru")
+  res = insert(res, '/pydap', len(root_path))
+  return res
 
 def insert(original, new, pos):
   return original[:pos] + new + original[pos:]
@@ -25,17 +27,22 @@ con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' %
     "password": POSTGRES_PASSWORD
 })
 
-root_path = 'http://posada.solab.rshu.ru/'
+root_path = 'http://posada.solab.rshu.ru'
 dap_folders_url = '%s/pydap/public/allData/SSMI/f13/bmaps_v07/' % root_path
+
+print "DAP ROOT PATH: " + dap_folders_url
 
 # parse each year
 xml = parse(urllib.urlopen(dap_folders_url + 'catalog.xml'))
 folders = xml.getElementsByTagName('catalogRef')
 
+
 for folder in folders:
   if folder.attributes['name'].value != 'weeks':
-    year_url = addPydapToUrl(folder.attributes['xlink:href'].value)
+    year_url = normalizeUrl(folder.attributes['xlink:href'].value)
     year_name = folder.attributes['name'].value
+
+    print year_url
 
     print 'Processing %s year' % year_name[1:]
 
@@ -44,15 +51,17 @@ for folder in folders:
     month_folders = xml.getElementsByTagName('catalogRef')
 
     for month_folder in month_folders:
-      month_url = addPydapToUrl(month_folder.attributes['xlink:href'].value)
+      month_url = normalizeUrl(month_folder.attributes['xlink:href'].value)
 
       # parse each file
       xml = parse(urllib.urlopen(month_url))
       files = xml.getElementsByTagName('dataset')[0].getElementsByTagName('dataset')
 
       for data_file in files:
-        file_url = root_path + 'pydap/' + data_file.attributes['urlPath'].value
+        file_url = root_path + '/pydap/' + data_file.attributes['urlPath'].value
         file_name = data_file.attributes['name'].value
+
+        print file_url
 
         # add data to database
         dataset = open_url(file_url)
