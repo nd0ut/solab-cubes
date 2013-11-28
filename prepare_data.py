@@ -1,3 +1,4 @@
+import config
 import pdb
 import psycopg2
 import urllib
@@ -15,16 +16,11 @@ def normalizeUrl(url):
 def insert(original, new, pos):
   return original[:pos] + new + original[pos:]
 
-# Postgres config
-POSTGRES_USER = "kate"
-POSTGRES_PASSWORD = "06Sen2013"
-POSTGRES_DBNAME = "cube_db"
-
 # initialize postgres connection
 con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' % {
-    "dbname": POSTGRES_DBNAME,
-    "user": POSTGRES_USER,
-    "password": POSTGRES_PASSWORD
+    "dbname": config.POSTGRES_DBNAME,
+    "user": config.POSTGRES_USER,
+    "password": config.POSTGRES_PASSWORD
 })
 
 root_path = 'http://posada.solab.rshu.ru'
