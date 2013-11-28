@@ -6,10 +6,12 @@
             "levels": [
                 { "name": "year"},
                 { "name": "month" },
-                { "name": "day" }
+                { "name": "day" },
+                { "name": "hour" },
+                { "name": "minute" }
             ],
             "hierarchies": [
-                {"name": "ymd", "levels":["year", "month", "day"]}
+                {"name": "ymd", "levels":["year", "month", "day", "hour", "minute"]}
             ],
             "default_hierarchy_name": "ymd"
         },
@@ -35,7 +37,9 @@
                 "date": {"column":"datetime"},
                 "date.year": {"column":"datetime", "extract":"year"},
                 "date.month": {"column":"datetime", "extract":"month"},
-                "date.day": {"column":"datetime", "extract":"day"}
+                "date.day": {"column":"datetime", "extract":"day"},
+                "date.hour": {"column":"datetime", "extract":"hour"},
+                "date.minute": {"column":"datetime", "extract":"minute"}
             }
         }
     ]
