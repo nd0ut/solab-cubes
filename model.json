@@ -13,17 +13,8 @@
             ],
             "default_hierarchy_name": "ymd"
         },
-        {
-            "name":"coords",
-            "levels": [
-                { "name": "lat"},
-                { "name": "lon" }
-            ],
-            "hierarchies": [
-                {"name": "coords", "levels":["lat", "lon"]}
-            ],
-            "default_hierarchy_name": "coords"
-        }
+        {"name":"lat"},
+        {"name":"lon"}
     ],
     "cubes": [
         {
@@ -32,7 +23,8 @@
             "dimensions": [
                 "speed",
                 "date",
-                "coords"
+                "lat",
+                "lon"
             ],
 
             "measures": [
@@ -43,9 +35,7 @@
                 "date": {"column":"datetime"},
                 "date.year": {"column":"datetime", "extract":"year"},
                 "date.month": {"column":"datetime", "extract":"month"},
-                "date.day": {"column":"datetime", "extract":"day"},
-                "coords.lat": {"column":"lat"},
-                "coords.lon": {"column":"lon"}
+                "date.day": {"column":"datetime", "extract":"day"}
             }
         }
     ]
