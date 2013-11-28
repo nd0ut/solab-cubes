@@ -1,14 +1,52 @@
 {
     "dimensions": [
-        {"name":"wind_speed"},
-        {"name":"datetime"},
-        {"name":"lat"},
-        {"name":"lon"}
+        {"name":"speed"},
+        {
+            "name":"date",
+            "levels": [
+                { "name": "year"},
+                { "name": "month" },
+                { "name": "day" }
+            ],
+            "hierarchies": [
+                {"name": "ymd", "levels":["year", "month", "day"]}
+            ],
+            "default_hierarchy_name": "ymd"
+        },
+        {
+            "name":"coords",
+            "levels": [
+                { "name": "lat"},
+                { "name": "lon" }
+            ],
+            "hierarchies": [
+                {"name": "coords", "levels":["lat", "lon"]}
+            ],
+            "default_hierarchy_name": "coords"
+        }
     ],
     "cubes": [
         {
             "name": "wind",
-            "dimensions": ["wind_speed", "datetime", "lat", "lon"]
+
+            "dimensions": [
+                "speed",
+                "date",
+                "coords"
+            ],
+
+            "measures": [
+            ],
+
+            "mappings": {
+                "speed": {"column":"wind_speed"},
+                "date": {"column":"datetime"},
+                "date.year": {"column":"datetime", "extract":"year"},
+                "date.month": {"column":"datetime", "extract":"month"},
+                "date.day": {"column":"datetime", "extract":"day"},
+                "coords.lat": {"column":"lat"},
+                "coords.lon": {"column":"lon"}
+            }
         }
     ]
 }
