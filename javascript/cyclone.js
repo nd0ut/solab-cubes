@@ -44,7 +44,7 @@ window.cyclon_ranges = function(lat, lon, radius) {
 window.build_query = function(options) {
   var cyclon_ranges = window.cyclon_ranges(options.lat, options.lon, options.radius);
 
-  return "http://localhost:5000/cube/{cube_name}/aggregate?drilldown={drilldown}&cut=lat:{lat_min}--{lat_max}|lon:{lon_min}--{lon_max}|date:{date}".supplant({
+  return "http://geo.solab.rshu.ru:5000/cube/{cube_name}/aggregate?drilldown={drilldown}&cut=lat:{lat_min}--{lat_max}|lon:{lon_min}--{lon_max}|date:{date}".supplant({
     "cube_name": "wind",
     "drilldown": "speed|date:minute",
     "lat_min": cyclon_ranges.lat.min,
