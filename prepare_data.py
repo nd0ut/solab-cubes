@@ -1,4 +1,5 @@
 import config
+import re
 import ipdb
 import psycopg2
 import urllib
@@ -20,7 +21,7 @@ filecounter = 0
 
 print "DAP ROOT PATH: " + dap_folders_url
 
-# parse each year
+# each year
 xml = parse(urllib.urlopen(dap_folders_url + 'catalog.xml'))
 folders = xml.getElementsByTagName('catalogRef')
 
@@ -34,14 +35,14 @@ for folder in folders:
 
     print 'Processing %s year' % year_name[1:]
 
-    # parse each month
+    # each month
     xml = parse(urllib.urlopen(year_url))
     month_folders = xml.getElementsByTagName('catalogRef')
 
     for month_folder in month_folders:
       month_url = month_folder.attributes['xlink:href'].value
 
-      # parse each file
+      # each file
       xml = parse(urllib.urlopen(month_url))
       files = xml.getElementsByTagName('dataset')[0].getElementsByTagName('dataset')
 
@@ -49,13 +50,13 @@ for folder in folders:
         file_url = root_path + '/pydap/' + data_file.attributes['urlPath'].value
         file_name = data_file.attributes['name'].value
 
-        # add data to database
-        if filecounter <= 2 :
+        if re.match('.+_..........\.gz', file_name):
+          if filecounter <= 2 :
             print file_url
             dataset = open_url(file_url)
             parsers.wind.parse(con, dataset)
             filecounter = filecounter + 1
 
+        con.commit()
 
-con.commit()
 con.close()
