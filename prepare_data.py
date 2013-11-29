@@ -56,7 +56,6 @@ for folder in folders:
 
           dataset = open_url(file_url)
           parsers.wind.parse(con, dataset)
-          filecounter = filecounter + 1
 
           con.commit()
 
