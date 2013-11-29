@@ -50,6 +50,11 @@ def parse(dbConn, dataset):
               t = t * time_scale_factor + time_add_offset
               hour = int(t/60)
               min = t%60
+
+              if hour > 23:
+                hour = 23
+                min = 59
+
               filetime = datetime.time(int(hour), int(min))
 
           else:
