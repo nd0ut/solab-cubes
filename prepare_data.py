@@ -1,4 +1,5 @@
 import config
+from time import gmtime, strftime
 import re
 import ipdb
 import psycopg2
@@ -14,25 +15,24 @@ con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' %
     "password": config.POSTGRES_PASSWORD
 })
 
+print "Job started at %s" % strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
 root_path = 'http://posada.solab.rshu.ru'
 dap_folders_url = '%s/pydap/public/allData/SSMI/f13/bmaps_v07/' % root_path
 
 filecounter = 0
 
-print "DAP ROOT PATH: " + dap_folders_url
-
 # each year
 xml = parse(urllib.urlopen(dap_folders_url + 'catalog.xml'))
 folders = xml.getElementsByTagName('catalogRef')
-
 
 for folder in folders:
   if folder.attributes['name'].value != 'weeks':
     year_url = folder.attributes['xlink:href'].value
     year_name = folder.attributes['name'].value
 
-    print year_url
-
+    print ""
+    print ""
     print 'Processing %s year' % year_name[1:]
 
     # each month
@@ -41,6 +41,9 @@ for folder in folders:
 
     for month_folder in month_folders:
       month_url = month_folder.attributes['xlink:href'].value
+      month_name = month_folder.attributes['name'].value
+
+      print '  %s month' % month_name[1:]
 
       # each file
       xml = parse(urllib.urlopen(month_url))
@@ -52,7 +55,8 @@ for folder in folders:
 
         if re.match('.+_..........\.gz', file_name):
           if filecounter <= 2 :
-            print file_url
+            print '    %s' % file_name
+
             dataset = open_url(file_url)
             parsers.wind.parse(con, dataset)
             filecounter = filecounter + 1
