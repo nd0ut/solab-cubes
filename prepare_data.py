@@ -1,6 +1,8 @@
 import config
 from time import gmtime, strftime
 import re
+import traceback
+import sys
 import ipdb
 import psycopg2
 import urllib
@@ -52,15 +54,16 @@ for folder in folders:
         file_name = data_file.attributes['name'].value
 
         if re.match('.+_..........\.gz', file_name):
-          print '    %s' % file_name
+          sys.stdout.write('    %s' % file_name)
+          sys.stdout.flush()
 
           try:
             dataset = open_url(file_url)
             parsers.wind.parse(con, dataset)
             print " OK"
-          except:
+          except (RuntimeError, TypeError, NameError, ValueError), e:
             print " ERROR"
-            print sys.exc_info()[0]
+            traceback.print_exc()
 
 
         con.commit()
