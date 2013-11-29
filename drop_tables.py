@@ -1,9 +1,5 @@
 import config
-import datetime
-import pdb
 import psycopg2
-
-from pydap.client import open_url
 
 
 con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' % {

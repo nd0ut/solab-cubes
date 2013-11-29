@@ -1,9 +1,5 @@
 import config
-import datetime
-import pdb
 import psycopg2
-
-from pydap.client import open_url
 
 con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' % {
     "dbname": config.POSTGRES_DBNAME,
@@ -14,6 +10,7 @@ con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' %
 cur = con.cursor()
 
 cur.execute("CREATE TABLE IF NOT EXISTS wind (id SERIAL, datetime timestamp, wind_speed REAL, lon REAL, lat REAL, part_day REAL)")
+cur.execute("CREATE INDEX idx_main ON wind(lat, lon, datetime)")
 
 con.commit()
 con.close()
