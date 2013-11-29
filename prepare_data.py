@@ -1,5 +1,5 @@
 import config
-import pdb
+import ipdb
 import psycopg2
 import urllib
 from xml.dom.minidom import *
@@ -7,16 +7,6 @@ from pydap.client import open_url
 
 import parsers
 
-
-def normalizeUrl(url):
-  res = url.replace("127.0.0.1:3031", "posada.solab.rshu.ru")
-  res = insert(res, '/pydap', len(root_path))
-  return res
-
-def insert(original, new, pos):
-  return original[:pos] + new + original[pos:]
-
-# initialize postgres connection
 con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' % {
     "dbname": config.POSTGRES_DBNAME,
     "user": config.POSTGRES_USER,
@@ -37,7 +27,7 @@ folders = xml.getElementsByTagName('catalogRef')
 
 for folder in folders:
   if folder.attributes['name'].value != 'weeks':
-    year_url = normalizeUrl(folder.attributes['xlink:href'].value)
+    year_url = folder.attributes['xlink:href'].value
     year_name = folder.attributes['name'].value
 
     print year_url
@@ -49,7 +39,7 @@ for folder in folders:
     month_folders = xml.getElementsByTagName('catalogRef')
 
     for month_folder in month_folders:
-      month_url = normalizeUrl(month_folder.attributes['xlink:href'].value)
+      month_url = month_folder.attributes['xlink:href'].value
 
       # parse each file
       xml = parse(urllib.urlopen(month_url))
