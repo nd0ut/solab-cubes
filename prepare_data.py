@@ -54,9 +54,15 @@ for folder in folders:
         if re.match('.+_..........\.gz', file_name):
           print '    %s' % file_name
 
-          dataset = open_url(file_url)
-          parsers.wind.parse(con, dataset)
+          try:
+            dataset = open_url(file_url)
+            parsers.wind.parse(con, dataset)
+            print " OK"
+          except:
+            print " ERROR"
+            print sys.exc_info()[0]
 
-          con.commit()
+
+        con.commit()
 
 con.close()
