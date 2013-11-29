@@ -20,8 +20,6 @@ print "Job started at %s" % strftime("%Y-%m-%d %H:%M:%S", gmtime())
 root_path = 'http://posada.solab.rshu.ru'
 dap_folders_url = '%s/pydap/public/allData/SSMI/f13/bmaps_v07/' % root_path
 
-filecounter = 0
-
 # each year
 xml = parse(urllib.urlopen(dap_folders_url + 'catalog.xml'))
 folders = xml.getElementsByTagName('catalogRef')
@@ -54,13 +52,12 @@ for folder in folders:
         file_name = data_file.attributes['name'].value
 
         if re.match('.+_..........\.gz', file_name):
-          if filecounter <= 2 :
-            print '    %s' % file_name
+          print '    %s' % file_name
 
-            dataset = open_url(file_url)
-            parsers.wind.parse(con, dataset)
-            filecounter = filecounter + 1
+          dataset = open_url(file_url)
+          parsers.wind.parse(con, dataset)
+          filecounter = filecounter + 1
 
-        con.commit()
+          con.commit()
 
 con.close()
