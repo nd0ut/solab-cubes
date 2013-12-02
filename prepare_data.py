@@ -19,6 +19,10 @@ con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' %
 
 print "Job started at %s" % strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
+parsed_log_file = open('parsed.log', 'a+')
+parsed_arr = parsed_log_file.readlines()
+parsed_arr = map(lambda file: file.strip(), parsed_arr)
+
 root_path = 'http://posada.solab.rshu.ru'
 dap_folders_url = '%s/pydap/public/allData/SSMI/f13/bmaps_v07/' % root_path
 
@@ -57,15 +61,23 @@ for folder in folders:
           sys.stdout.write('    %s' % file_name)
           sys.stdout.flush()
 
+          if file_name in parsed_arr:
+            print " SKIP"
+            continue
+
           try:
             dataset = open_url(file_url)
             parsers.wind.parse(con, dataset)
+            parsed_log_file.write('%s\n' % file_name)
+            parsed_log_file.flush()
             print " OK"
-          except (RuntimeError, TypeError, NameError, ValueError), e:
+          except (RuntimeError, TypeError, ValueError), e:
             print " ERROR"
+            print e
             traceback.print_exc()
 
 
         con.commit()
 
 con.close()
+parsed_log_file.close()
