@@ -8,6 +8,7 @@ import psycopg2
 import urllib
 from xml.dom.minidom import *
 from pydap.client import open_url
+from pydap.exceptions import DapError
 
 import parsers
 
@@ -71,7 +72,7 @@ for folder in folders:
             parsed_log_file.write('%s\n' % file_name)
             parsed_log_file.flush()
             print " OK"
-          except (RuntimeError, TypeError, ValueError), e:
+          except (DapError, RuntimeError, TypeError, ValueError), e:
             print " ERROR"
             print e
             traceback.print_exc()
