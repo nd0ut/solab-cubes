@@ -14,7 +14,7 @@ def parse(dbConn, dataset):
 
   time = dataset.time.time[:,:,:][0]
   time = time[:,lat_min:,:]
-  
+
   wspd_scale_factor = dataset.wspd.scale_factor
   wspd_add_offset = dataset.wspd.add_offset
   time_scale_factor = dataset.time.scale_factor
@@ -27,7 +27,7 @@ def parse(dbConn, dataset):
   day=mydate[6:8]
   filedate = datetime.date(int(year), int(mon), int(day))
 
-  
+
   for i in range(wspd.shape[0]):
     for j in range(wspd.shape[1]):
         for k in range(wspd.shape[2]):
@@ -67,3 +67,4 @@ def parse(dbConn, dataset):
           wind_item = (date, float(value), float(lon), float(lat), part_day)
 
           cur.execute("INSERT INTO wind (datetime, wind_speed, lon, lat, part_day) VALUES (%s, %s, %s, %s, %s)", wind_item)
+  dbConn.commit()
