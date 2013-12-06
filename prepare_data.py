@@ -78,7 +78,6 @@ for folder in folders:
             traceback.print_exc()
 
 
-        con.commit()
 
 con.close()
 parsed_log_file.close()
