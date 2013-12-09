@@ -17,7 +17,7 @@ Array.prototype.clean = function(deleteValue) {
   return this;
 };
 
-window.cyclon_ranges = function(lat, lon, radius) {
+cyclon_ranges = function(lat, lon, radius) {
   var BEARING_HORIZONTAL = 90;
   var BEARING_VERTICAL = 0;
 
@@ -42,7 +42,7 @@ window.cyclon_ranges = function(lat, lon, radius) {
 };
 
 window.build_query = function(options) {
-  var cyclon_ranges = window.cyclon_ranges(options.lat, options.lon, options.radius);
+  var cyclon_ranges = cyclon_ranges(options.lat, options.lon, options.radius);
 
   return "http://geo.solab.rshu.ru:5000/cube/{cube_name}/aggregate?drilldown={drilldown}&cut=lat:{lat_min}--{lat_max}|lon:{lon_min}--{lon_max}|date:{date}".supplant({
     "cube_name": "wind",
@@ -51,6 +51,6 @@ window.build_query = function(options) {
     "lat_max": cyclon_ranges.lat.max,
     "lon_min": cyclon_ranges.lon.min,
     "lon_max": cyclon_ranges.lon.max,
-    "date": [options.date.year, options.date.month, options.date.day, options.date.hour, options.date.minute].clean().toString()
+    "date": [options.date.getUTCFullYear(), options.date.getUTCMonth(), options.date.getUTCDate(), options.date.getUTCHours(), options.date.getUTCMinutes()].clean().toString()
   });
 };
