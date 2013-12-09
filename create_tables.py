@@ -10,7 +10,7 @@ con = psycopg2.connect('dbname=%(dbname)s user=%(user)s password=%(password)s' %
 cur = con.cursor()
 
 cur.execute("CREATE TABLE IF NOT EXISTS wind (id SERIAL, datetime timestamp, wind_speed REAL, lon REAL, lat REAL, part_day REAL)")
-cur.execute("CREATE INDEX idx_main ON wind(lat, lon, datetime)")
+cur.execute("create index ymdh_idx on wind ( extract(year from datetime), extract(month from datetime), extract(day from datetime),extract(hour from datetime), lat, lon  );")
 
 con.commit()
 con.close()
