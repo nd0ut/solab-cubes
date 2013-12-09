@@ -30,6 +30,7 @@
             ],
 
             "measures": [
+                { "name": "speed", "label": "Wind speed"}
             ],
 
             "mappings": {
