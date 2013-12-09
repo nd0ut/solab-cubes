@@ -44,6 +44,9 @@ def parse(dbConn, dataset):
           lon = lons[i]
           part_day = k
 
+          if lon > 180:
+            lon = lon - 360
+
           # get date
           t = time[i, j, k]
           if t < 250:
