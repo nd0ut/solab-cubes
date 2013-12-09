@@ -30,7 +30,7 @@
             ],
 
             "measures": [
-                { "name": "speed", "label": "Wind speed"}
+                { "name": "speed", "label": "Wind speed", "aggregations": ["min", "max", "avg"] }
             ],
 
             "mappings": {
